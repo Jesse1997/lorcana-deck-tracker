@@ -36,7 +36,7 @@ public class CardsController : ControllerBase
                 Subname = card.Subname ?? "",
                 Price = card.Price,
                 Type = card.Type,
-                Amount = user.Deck.DeckCards.SingleOrDefault(x => x.Card.Name.Equals(card.Name) && x.Card.Subname.Equals(card.Subname) && x.Card.IsFoil == card.IsFoil && x.Card.IsBorderless == card.IsBorderless)?.Amount ?? 0,
+                Amount = user.Deck.DeckCards.SingleOrDefault(x => x.Card.Name.Equals(card.Name) && (card.Subname == null || card.Subname.Equals(card.Subname)) && x.Card.IsFoil == card.IsFoil && x.Card.IsBorderless == card.IsBorderless)?.Amount ?? 0,
                 IsFoil = card.IsFoil,
                 IsBorderless = card.IsBorderless
             });
@@ -60,14 +60,14 @@ public class CardsController : ControllerBase
 
         var deckCards = user.Deck.DeckCards;
 
-        var foundCard = deckCards.SingleOrDefault(x => x.Card.Name.Equals(card.Name) && x.Card.Subname.Equals(card.Subname) && x.Card.IsFoil == card.IsFoil && x.Card.IsBorderless == card.IsBorderless);
+        var foundCard = deckCards.SingleOrDefault(x => x.Card.Name.Equals(card.Name) && (card.Subname == null || card.Subname.Equals(card.Subname)) && x.Card.IsFoil == card.IsFoil && x.Card.IsBorderless == card.IsBorderless);
 
         if (foundCard != null)
         {
             foundCard.Amount += 1;
         } else
         {
-            var newCard = _dbContext.Cards.Single(x => x.Name.Equals(card.Name) && x.Subname.Equals(card.Subname) && x.IsFoil == card.IsFoil && x.IsBorderless == card.IsBorderless);
+            var newCard = _dbContext.Cards.Single(x => x.Name.Equals(card.Name) && (x.Subname == null || x.Subname.Equals(card.Subname)) && x.IsFoil == card.IsFoil && x.IsBorderless == card.IsBorderless);
             deckCards.Add(new DeckCard
             {
                 Amount = 1,
@@ -88,7 +88,7 @@ public class CardsController : ControllerBase
 
         var deckCards = user.Deck.DeckCards;
 
-        var foundCard = deckCards.SingleOrDefault(x => x.Card.Name.Equals(card.Name) && x.Card.Subname.Equals(card.Subname) && x.Card.IsFoil == card.IsFoil && x.Card.IsBorderless == card.IsBorderless);
+        var foundCard = deckCards.SingleOrDefault(x => x.Card.Name.Equals(card.Name) && (card.Subname == null || card.Subname.Equals(card.Subname)) && x.Card.IsFoil == card.IsFoil && x.Card.IsBorderless == card.IsBorderless);
 
         if (foundCard.Amount == 1) {
             deckCards.Remove(foundCard);

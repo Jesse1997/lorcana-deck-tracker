@@ -1,24 +1,20 @@
 ﻿<app-spinner></app-spinner>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand navbar-dark bg-dark">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
+        <li *ngIf='!isUserAuthenticated' class="nav-item">
+            <a class="nav-link" [routerLink]="['/home']" routerLinkActive="active" 
+              [routerLinkActiveOptions]="{exact: true}"> Home </a>
+        </li>
+        <li *ngIf='isUserAuthenticated' class="nav-item">
             <a class="nav-link" [routerLink]="['/dashboard/overview']" routerLinkActive="active" 
               [routerLinkActiveOptions]="{exact: true}"> Dashboard </a>
         </li>
-        <li class="nav-item">
+        <li *ngIf='isUserAuthenticated' class="nav-item">
             <a class="nav-link" [routerLink]="['/deck/overview']" routerLinkActive="active" 
               [routerLinkActiveOptions]="{exact: true}"> My Deck </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/faq/overview']" routerLinkActive="active" 
-              [routerLinkActiveOptions]="{exact: true}"> FAQ </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/updates/overview']" routerLinkActive="active" 
-              [routerLinkActiveOptions]="{exact: true}"> Updates </a>
-        </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0">
+      <form class="form-inline my-2 my-lg-0 ms-auto">
         <ul *ngIf='!isUserAuthenticated' class="navbar-nav mr-auto mt-2 mt-lg-0">
           <li class="nav-item">
             <a class="nav-link"[routerLink]="['/authentication/login']" routerLinkActive="active" 

@@ -10,9 +10,9 @@ import { ErrorHandlerService } from './shared/services/error-handler.service';
 import { AuthGuard } from './shared/guards/auth.guard';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { ForbiddenComponent } from './forbidden/forbidden.component';
-import { AdminGuard } from './shared/guards/admin.guard';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
+import { HomeComponent } from './home/home.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -23,18 +23,21 @@ export function tokenGetter() {
     AppComponent,
     PrivacyComponent,
     ForbiddenComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    HomeComponent
     ],
   imports: [
     BrowserModule, HttpClientModule,
     RouterModule.forRoot([
       { path: 'authentication', loadChildren: () => import('./authentication/authentication.module').then(m => m.AuthenticationModule) },
       { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule), canActivate: [AuthGuard] },
-      { path: 'faq', loadChildren: () => import('./faq/faq.module').then(m => m.FaqModule), canActivate: [AuthGuard] },
-      { path: 'updates', loadChildren: () => import('./updates/updates.module').then(m => m.UpdatesModule), canActivate: [AuthGuard] },
+      { path: 'faq', loadChildren: () => import('./faq/faq.module').then(m => m.FaqModule) },
+      { path: 'updates', loadChildren: () => import('./updates/updates.module').then(m => m.UpdatesModule) },
       { path: 'deck', loadChildren: () => import('./deck/deck.module').then(m => m.DeckModule), canActivate: [AuthGuard] },
-      { path: 'privacy', component: PrivacyComponent, canActivate: [AuthGuard, AdminGuard] },
-      { path: 'forbidden', component: ForbiddenComponent }
+      { path: 'home', component: HomeComponent },
+      { path: 'privacy', component: PrivacyComponent },
+      { path: 'forbidden', component: ForbiddenComponent },
+      { path: '**', redirectTo: '/dashboard/overview', pathMatch: 'full' }
   ], { useHash: true }),
   JwtModule.forRoot({
     config: {

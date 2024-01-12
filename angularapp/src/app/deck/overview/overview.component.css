@@ -5,3 +5,9 @@ h1 {
 #deck-stats {
     background-color: #e7ecef;
 }
+
+@media (max-width: 920px) {
+    .grid {
+        grid-template-columns: auto !important;
+    }
+  }
