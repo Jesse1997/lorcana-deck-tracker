@@ -1,0 +1,49 @@
+<div style="display: grid; grid-template-columns: auto auto;" class="w-75 mx-auto">
+    <div class="card m-3">
+        <h5 class="card-header">My Collection</h5>
+        <div class="card-body">
+          <p class="card-title">Cards Collected: {{ deckCards.length }}/{{ cards.length }}</p>
+          <p class="card-title">Enchanted Cards Collected: {{ enchantedCards }}/{{ totalEnchantedCards }}</p>
+          <p class="card-title">Foil Cards Collected: {{ foilCards }}/{{ totalFoilCards }}</p>
+          <p class="card-title">Normal Cards Collected: {{ normalCards }}/{{ totalNormalCards }}</p>
+        </div>
+      </div>
+      <div class="card m-3">
+        <h5 class="card-header">My Deck Value</h5>
+        <div class="card-body">
+          <p class="card-title">Total Deck Value: <b>{{ totalValue | currency: 'EUR'}}</b></p>
+          <p class="card-title">Enchanted Value: <b>{{ enchantedValue | currency: 'EUR'}}</b></p>
+          <p class="card-title">Foil Value: <b>{{ foilValue | currency: 'EUR'}}</b></p>
+          <p class="card-title">Normal Value: <b>{{ normalValue | currency: 'EUR'}}</b></p>
+        </div>
+      </div>
+</div>
+<div style="display: grid; grid-template-columns: auto auto;" class="w-75 mx-auto">
+    <div class="card m-3">
+        <h5 class="card-header">Most Valuable Cards In Deck</h5>
+        <div class="card-body">
+          <h4 *ngIf="valueCard1" class="card-title">#1: <b>{{ valueCard1?.name }}</b>, {{ valueCard1?.subname }}{{ valueCard1?.isBorderless ? '(Borderless)' : '' }}{{ valueCard1?.isFoil ? '(Foil)' : '' }} - {{ valueCard1?.price | currency: 'EUR'}}</h4>
+          <h5 *ngIf="valueCard2" class="card-title">#2: <b>{{ valueCard2?.name }}</b>, {{ valueCard2?.subname }}{{ valueCard2?.isBorderless ? '(Borderless)' : '' }}{{ valueCard2?.isFoil ? '(Foil)' : '' }} - {{ valueCard2?.price | currency: 'EUR'}}</h5>
+          <h6 *ngIf="valueCard3" class="card-title">#3: <b>{{ valueCard3?.name }}</b>, {{ valueCard3?.subname }}{{ valueCard3?.isBorderless ? '(Borderless)' : '' }}{{ valueCard3?.isFoil ? '(Foil)' : '' }} - {{ valueCard3?.price | currency: 'EUR'}}</h6>
+        </div>
+      </div>
+      <div class="card m-3">
+        <h5 class="card-header">Most Copies In Deck</h5>
+        <div class="card-body">
+          <h4 *ngIf="copyCard1" class="card-title">#1: <b>{{ copyCard1?.name }}</b>, {{ copyCard1?.subname }}{{ copyCard1?.isBorderless ? '(Borderless)' : '' }}{{ copyCard1?.isFoil ? '(Foil)' : '' }} - {{ copyCard1?.amount }}</h4>
+          <h5 *ngIf="copyCard2" class="card-title">#2: <b>{{ copyCard2?.name }}</b>, {{ copyCard2?.subname }}{{ copyCard2?.isBorderless ? '(Borderless)' : '' }}{{ copyCard2?.isFoil ? '(Foil)' : '' }} - {{ copyCard2?.amount }}</h5>
+          <h6 *ngIf="copyCard3" class="card-title">#3: <b>{{ copyCard3?.name }}</b>, {{ copyCard3?.subname }}{{ copyCard3?.isBorderless ? '(Borderless)' : '' }}{{ copyCard3?.isFoil ? '(Foil)' : '' }} - {{ copyCard3?.amount }}</h6>
+        </div>
+      </div>
+</div>
+<div class="graph container bg-light">
+    <div style="text-align:center">
+        <apx-chart
+          [series]="chartOptions.series"
+          [chart]="chartOptions.chart"
+          [dataLabels]="chartOptions.dataLabels"
+          [legend]="chartOptions.legend"
+          [colors]="chartOptions.colors"
+          [plotOptions]="chartOptions.plotOptions"
+        ></apx-chart>
+      </div></div>

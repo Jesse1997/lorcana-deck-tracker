@@ -1,0 +1,167 @@
+<div class="container">
+    <div class="alert alert-success position-absolute w-50" style="z-index: 1;" role="alert" *ngIf="addedCard !== null">
+        <h4 class="alert-heading">Card Added!</h4>
+        <p class="mb-0">You now have <b>{{addedCard.amount}}</b> cards of <b>{{ addedCard.name }}{{addedCard.subname === '' ? '' : ', ' + addedCard.subname}}{{addedCard.isFoil ? '(Foil)': ''}}{{addedCard.isBorderless ? '(Borderless)': ''}}</b></p>
+    </div>
+    <div class="alert alert-danger position-absolute w-50" style="z-index: 1;" role="alert" *ngIf="removedCard !== null">
+        <h4 class="alert-heading">Card Removed!</h4>
+        <p class="mb-0">You now have <b>{{removedCard.amount - 1}}</b> cards of <b>{{ removedCard.name }}{{removedCard.subname === '' ? '' : ', ' + removedCard.subname}}{{removedCard.isFoil ? '(Foil)': ''}}{{removedCard.isBorderless ? '(Borderless)': ''}}</b></p>
+    </div>
+
+    <p *ngIf="!deckCards"><em>Loading deck...</em></p>
+
+    <div *ngIf="deckCards" id="deck-stats" class="card text-dark bg-light my-5 text-center w-50 mx-auto" style="z-index: -1;">
+        <div class="card-header text-center" style="font-size: x-large;">My Deck</div>
+        <div class="card-body" style="display: grid; grid-template-columns: auto auto;">
+          <p class="card-text mx-auto">Total Cards: <b>{{totalCards}}</b> <br>Unique Enchanted Cards: <b>{{enchantedCards}}/{{totalEnchantedCards}}</b><br>Unique Foil Cards: <b>{{foilCards}}/{{totalFoilCards}}</b><br>Unique Normal Cards: <b>{{normalCards}}/{{totalNormalCards}}</b></p>
+          <p class="card-text mx-auto">Total Deck Value: <b>{{totalValue | currency: 'EUR'}}</b><br>Enchanted Cards Value: <b>{{enchantedValue | currency: 'EUR'}}</b><br>Foil Cards Value: <b>{{foilValue | currency: 'EUR'}}</b><br>Normal Cards Value: <b>{{normalValue | currency: 'EUR'}}</b></p>
+
+        </div>
+      </div>
+    <p class="text-center">
+        <a class="btn btn-success p-2 me-2" data-bs-toggle="collapse" href="#addButton" role="button" aria-expanded="false" aria-controls="addButton">
+          Add Card <fa-icon [icon]="faAdd"></fa-icon>
+
+        </a>
+        <a class="btn btn-primary p-2" data-bs-toggle="collapse" href="#filterDeck" (click)="clearFilters()" role="button" aria-expanded="false" aria-controls="filterDeck">
+            Filter Deck <fa-icon [icon]="faFilter"></fa-icon>
+          </a>
+      </p>
+      <div class="collapse" id="addButton">
+        <div class="input-group">
+            <div class="form-outline w-100 text-center mb-2">
+              <input type="text" id="searchFilter" placeholder="Add Card..." (input)="showCards()" (blur)='hideCards()' class="form-control w-75 mx-auto d-inline" />
+            </div>
+            <div class="form-outline w-100">
+                    <table *ngIf="viewCards" class="table table-dark table-hover w-75 mx-auto">
+                        <tbody class="position-absolute w-75">
+                            <div *ngFor="let card of getFilteredCards()">
+                            <button (mousedown)="addCard(card)" class="w-100 d-block text-decoration-none">
+                                <tr class="w-100 d-block">
+                                    <td>{{ card.name }}{{card.subname === '' ? '' : ', ' + card.subname}}{{card.isFoil ? '(Foil)': ''}}{{card.isBorderless ? '(Borderless)': ''}}</td>
+                                </tr>
+                            </button>
+                        </div>
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+      </div>
+      <div class="collapse bg-dark p-3" id="filterDeck">
+        <h3 class="text-center text-light">Filter Deck</h3>
+        <div style="display: grid; grid-template-columns: auto auto;">
+            <div class="input-group pe-2">
+                <div class="form-outline input-group w-100 text-center mb-2">
+                    <span class="input-group-text" id="NameLabel">Name</span>
+                  <input type="text" id="nameFilter" placeholder="Filter by name..." (keyup)="showNames()" (blur)='hideNames()' class="form-control" aria-describedby="NameLabel"/>
+                </div>
+                <div class="form-outline w-100" style="z-index: 1;">
+                        <table *ngIf="viewNames" class="table table-dark table-hover w-75 mx-auto">
+                            <tbody class="position-absolute w-75">
+                                <div *ngFor="let name of getFilteredNames()">
+                                <button (mousedown)="addName(name)" class="w-100 d-block text-decoration-none">
+                                    <tr class="w-100 d-block">
+                                        <td>{{ name }}</td>
+                                    </tr>
+                                </button>
+                            </div>
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="form-outline input-group w-100 text-center mb-2">
+                  <span class="input-group-text" id="SubnameLabel">Subname</span>
+                  <input type="text" id="subnameFilter" placeholder="Filter by subname..." (keyup)="showSubnames()" (blur)='hideSubnames()' class="form-control" aria-describedby="SubnameLabel"/>
+                </div>
+                <div class="form-outline w-100" style="z-index: 1;">
+                        <table *ngIf="viewSubnames" class="table table-dark table-hover w-75 mx-auto">
+                            <tbody class="position-absolute w-75">
+                                <div *ngFor="let subname of getFilteredSubnames()">
+                                <button (mousedown)="addSubname(subname)" class="w-100 d-block text-decoration-none">
+                                    <tr class="w-100 d-block">
+                                        <td>{{ subname }}</td>
+                                    </tr>
+                                </button>
+                            </div>
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: auto auto auto;">
+            <select id="cardType" class="form-select pe-2" aria-label="Select Character" (change)="filter()">
+                <option value="" selected>Select Card Type</option>
+                <option value="Character">Character</option>
+                <option value="Item">Item</option>
+                <option value="Action">Action</option>
+              </select>
+              <div class="form-check mx-auto pe-2 mt-1">
+                <input class="form-check-input" type="checkbox" value="borderless" id="isBorderless" (change)="filter()">
+                <label class="form-check-label text-light" for="isBorderless">
+                  Borderless
+                </label>
+              </div>
+              <div class="form-check mx-auto pe-2 mt-1">
+                <input class="form-check-input" type="checkbox" value="foil" id="isFoil" (change)="filter()">
+                <label class="form-check-label text-light" for="isBorderless">
+                  Foil
+                </label>
+              </div>
+          </div>
+          <div class="mt-2" style="display: grid; grid-template-columns: auto auto auto auto;">
+            <div class="input-group mb-3 pe-2">
+                <span class="input-group-text" id="MinAmount">Min. Amount</span>
+                <input type="number" class="form-control" id="min-amount" aria-describedby="MinAmount" (change)="filter()">
+            </div>
+            <div class="input-group mb-3 pe-2">
+                <span class="input-group-text" id="MaxAmount">Max. Amount</span>
+                <input type="number" class="form-control" id="max-amount" aria-describedby="MaxAmount" (change)="filter()">
+            </div>
+            <div class="input-group mb-3 pe-2">
+                <span class="input-group-text" id="MinValue">Min. Value</span>
+                <input type="number" class="form-control" id="min-value" aria-describedby="MinValue" (change)="filter()">
+            </div>
+            <div class="input-group mb-3 pe-2">
+                <span class="input-group-text" id="MaxValue">Max. Value</span>
+                <input type="number" class="form-control" id="max-value" aria-describedby="MaxValue" (change)="filter()">
+            </div>
+          </div>
+          <div class="mt-2" style="display: grid; grid-template-columns: auto;">
+            <button class="btn btn-danger" (click)="clearFilters()">Clear Filters</button>
+          </div>
+      </div>
+    <table *ngIf="deckCards" class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Subname</th>
+                <th>Type</th>
+                <th>Foil</th>
+                <th>Borderless</th>
+                <th>Amount</th>
+                <th>Value</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let deckCard of filteredDeckCards">
+                <td>{{ deckCard.name }}</td>
+                <td>{{ deckCard.subname }}</td>
+                <td>{{ deckCard.type }}</td>
+                <td>{{ deckCard.isFoil ? 'Yes' : 'No' }}</td>
+                <td>{{ deckCard.isBorderless ? 'Yes' : 'No' }}</td>
+                <td>{{ deckCard.amount }}</td>
+                <td>{{ deckCard.price * deckCard.amount | currency: 'EUR' }}</td>
+                <td>
+                    <button (click)="deleteCard(deckCard)" data-toggle="tooltip" data-placement="top" title="Remove Card">
+                        <fa-icon [icon]="faMin"></fa-icon>
+                    </button>
+                    <button (click)="addCard(deckCard)" data-toggle="tooltip" data-placement="top" title="Add Card">
+                        <fa-icon [icon]="faAdd"></fa-icon>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
