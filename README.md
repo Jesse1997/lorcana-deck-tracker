@@ -49,4 +49,4 @@ Next to these 2 functionalities, the user can also sort the list.
 TODO
 
 ## Status
-This project is currently in progress.
+This project is currently in progress. The live preview can be found [here](https://lorcanadecktracker.com/#/home)
